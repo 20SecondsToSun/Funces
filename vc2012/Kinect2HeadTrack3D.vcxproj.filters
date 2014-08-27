@@ -58,6 +58,12 @@
     <Filter Include="blocks\Cinder-Curl\curl">
       <UniqueIdentifier>{50668652-456a-43ac-a73b-a47f3ee9c849}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\gesture">
+      <UniqueIdentifier>{ba44f087-4a42-4a84-bd7e-15c20e500f6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="blocks\Leap-Motion">
+      <UniqueIdentifier>{054c2dd5-8540-454c-8645-ae74b6bb804b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -189,6 +195,51 @@
     <ClInclude Include="..\blocks\Cinder-Curl\src\curl\typecheck-gcc.h">
       <Filter>blocks\Cinder-Curl\curl</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\controller\Clone.h">
+      <Filter>Source Files\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\elements\ChangeModeButton.h">
+      <Filter>Source Files\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\controller\FaceController.h">
+      <Filter>Source Files\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\locations\ScanFace.h">
+      <Filter>Source Files\locations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\controller\LeapController.h">
+      <Filter>Source Files\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gesture\Gesture.h">
+      <Filter>Source Files\gesture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gesture\PalmsGesture.h">
+      <Filter>Source Files\gesture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gesture\TwoFingers.h">
+      <Filter>Source Files\gesture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\blocks\LeapMotion\src\Cinder-LeapMotion.h">
+      <Filter>blocks\Leap-Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\blocks\LeapMotion\src\Leap.h">
+      <Filter>blocks\Leap-Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\blocks\LeapMotion\src\LeapMath.h">
+      <Filter>blocks\Leap-Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\gesture\OneFinger.h">
+      <Filter>Source Files\gesture</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Params.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\controller\Utils.h">
+      <Filter>Source Files\controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\locations\HowToUse.h">
+      <Filter>Source Files\locations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\Resources.h">
@@ -317,6 +368,42 @@
     </ClCompile>
     <ClCompile Include="..\blocks\Cinder-Curl\src\FtpManager.cpp">
       <Filter>blocks\Cinder-Curl</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\Clone.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\elements\ChangeModeButton.cpp">
+      <Filter>Source Files\elements</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\FaceController.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\locations\ScanFace.cpp">
+      <Filter>Source Files\locations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\LeapController.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gesture\Gesture.cpp">
+      <Filter>Source Files\gesture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gesture\PalmsGesture.cpp">
+      <Filter>Source Files\gesture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gesture\TwoFingers.cpp">
+      <Filter>Source Files\gesture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\blocks\LeapMotion\src\Cinder-LeapMotion.cpp">
+      <Filter>blocks\Leap-Motion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\gesture\OneFinger.cpp">
+      <Filter>Source Files\gesture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\controller\Utils.cpp">
+      <Filter>Source Files\controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\locations\HowToUse.cpp">
+      <Filter>Source Files\locations</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

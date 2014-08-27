@@ -77,7 +77,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\include;..\..\..\\include;..\..\..\\boost;..\blocks\Cinder-KCB\src;..\blocks\Cinder-KCB\lib;$(KINECT_TOOLKIT_DIR)inc;$(KINECTSDK10_DIR)\inc;..\src\locations;..\src\kinect;..\src\locations\modes;..\blocks\Skinning\include;..\blocks\Skinning\include\assimp;..\src\elements;..\src\controller;..\src\assets;..\blocks\Cinder-Curl\src</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\include;..\..\..\\include;..\..\..\\boost;..\blocks\Cinder-KCB\src;..\blocks\Cinder-KCB\lib;$(KINECT_TOOLKIT_DIR)inc;$(KINECTSDK10_DIR)\inc;..\src\locations;..\src\kinect;..\src\locations\modes;..\blocks\Skinning\include;..\blocks\Skinning\include\assimp;..\src\elements;..\src\controller;..\src\assets;..\blocks\Cinder-Curl\src;..\blocks\LeapMotion\src;..\src\gesture;..\src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;NOMINMAX;_WIN32_WINNT=0x0502;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader />
@@ -92,8 +92,8 @@
       <AdditionalIncludeDirectories>"..\..\..\\include";..\include</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>cinder-$(PlatformToolset).lib;Kinect10.lib;KinectCommonBridge.lib;FaceTrackLib.lib;OpenGL32.lib;..\blocks\Skinning\lib\msw\assimp3.0.lib;..\blocks\Cinder-Curl\lib\msw\libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\..\..\\lib\msw\$(PlatformTarget);$(KINECT_TOOLKIT_DIR)Lib\x86;$(KINECTSDK10_DIR)\lib\x86;..\blocks\Cinder-KCB\lib\$(PlatformTarget)\lib\$(Configuration)\$(PlatformToolset);..\blocks\Skinning\lib\msw\;..\blocks\Cinder-Curl\lib\msw\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>cinder-$(PlatformToolset).lib;Kinect10.lib;KinectCommonBridge.lib;FaceTrackLib.lib;OpenGL32.lib;..\blocks\Skinning\lib\msw\assimp3.0.lib;..\blocks\Cinder-Curl\lib\msw\libcurl.lib;..\blocks\LeapMotion\lib\msw\Leap.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\\lib\msw\$(PlatformTarget);$(KINECT_TOOLKIT_DIR)Lib\x86;$(KINECTSDK10_DIR)\lib\x86;..\blocks\Cinder-KCB\lib\$(PlatformTarget)\lib\$(Configuration)\$(PlatformToolset);..\blocks\Skinning\lib\msw\;..\blocks\Cinder-Curl\lib\msw\;..\blocks\LeapMotion\lib\msw\</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <GenerateMapFile>true</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
@@ -112,6 +112,7 @@
     <ClCompile Include="..\blocks\Cinder-Curl\src\Ftp.cpp" />
     <ClCompile Include="..\blocks\Cinder-Curl\src\FtpManager.cpp" />
     <ClCompile Include="..\blocks\Cinder-KCB\src\Kinect.cpp" />
+    <ClCompile Include="..\blocks\LeapMotion\src\Cinder-LeapMotion.cpp" />
     <ClCompile Include="..\blocks\Skinning\src\Actor.cpp" />
     <ClCompile Include="..\blocks\Skinning\src\AnimCurve.cpp" />
     <ClCompile Include="..\blocks\Skinning\src\CustomIOStream.cpp" />
@@ -125,14 +126,24 @@
     <ClCompile Include="..\blocks\Skinning\src\SkinnedVboMesh.cpp" />
     <ClCompile Include="..\blocks\Skinning\src\SkinningRenderer.cpp" />
     <ClCompile Include="..\src\assets\AssetsManager.cpp" />
+    <ClCompile Include="..\src\controller\Clone.cpp" />
+    <ClCompile Include="..\src\controller\FaceController.cpp" />
     <ClCompile Include="..\src\controller\HeadHelper.cpp" />
     <ClCompile Include="..\src\controller\HeadsController.cpp" />
+    <ClCompile Include="..\src\controller\LeapController.cpp" />
     <ClCompile Include="..\src\controller\Server.cpp" />
+    <ClCompile Include="..\src\controller\Utils.cpp" />
+    <ClCompile Include="..\src\elements\ChangeModeButton.cpp" />
     <ClCompile Include="..\src\elements\HeadObject.cpp" />
     <ClCompile Include="..\src\elements\PreloaderCircle.cpp" />
     <ClCompile Include="..\src\elements\QRcode.cpp" />
     <ClCompile Include="..\src\Funces.cpp" />
+    <ClCompile Include="..\src\gesture\Gesture.cpp" />
+    <ClCompile Include="..\src\gesture\OneFinger.cpp" />
+    <ClCompile Include="..\src\gesture\PalmsGesture.cpp" />
+    <ClCompile Include="..\src\gesture\TwoFingers.cpp" />
     <ClCompile Include="..\src\kinect\KinectAdapter.cpp" />
+    <ClCompile Include="..\src\locations\HowToUse.cpp" />
     <ClCompile Include="..\src\locations\Instruction.cpp" />
     <ClCompile Include="..\src\locations\Location.cpp" />
     <ClCompile Include="..\src\locations\LocationEngine.cpp" />
@@ -141,6 +152,7 @@
     <ClCompile Include="..\src\locations\modes\Head3DScreen.cpp" />
     <ClCompile Include="..\src\locations\modes\ModeBaseKinect.cpp" />
     <ClCompile Include="..\src\locations\ReadyScreen.cpp" />
+    <ClCompile Include="..\src\locations\ScanFace.cpp" />
     <ClCompile Include="..\src\locations\ScreenshotHolder.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +170,9 @@
     <ClInclude Include="..\blocks\Cinder-Curl\src\FtpManager.h" />
     <ClInclude Include="..\blocks\Cinder-KCB\lib\KinectCommonBridgeLib.h" />
     <ClInclude Include="..\blocks\Cinder-KCB\src\Kinect.h" />
+    <ClInclude Include="..\blocks\LeapMotion\src\Cinder-LeapMotion.h" />
+    <ClInclude Include="..\blocks\LeapMotion\src\Leap.h" />
+    <ClInclude Include="..\blocks\LeapMotion\src\LeapMath.h" />
     <ClInclude Include="..\blocks\Skinning\include\Actor.h" />
     <ClInclude Include="..\blocks\Skinning\include\AMeshSection.h" />
     <ClInclude Include="..\blocks\Skinning\include\AnimCurve.h" />
@@ -175,14 +190,24 @@
     <ClInclude Include="..\blocks\Skinning\include\SkinningRenderer.h" />
     <ClInclude Include="..\include\Resources.h" />
     <ClInclude Include="..\src\assets\AssetsManager.h" />
+    <ClInclude Include="..\src\controller\Clone.h" />
+    <ClInclude Include="..\src\controller\FaceController.h" />
     <ClInclude Include="..\src\controller\HeadHelper.h" />
     <ClInclude Include="..\src\controller\HeadsController.h" />
+    <ClInclude Include="..\src\controller\LeapController.h" />
     <ClInclude Include="..\src\controller\Server.h" />
+    <ClInclude Include="..\src\controller\Utils.h" />
     <ClInclude Include="..\src\elements\3DModelData.h" />
+    <ClInclude Include="..\src\elements\ChangeModeButton.h" />
     <ClInclude Include="..\src\elements\HeadObject.h" />
     <ClInclude Include="..\src\elements\PreloaderCircle.h" />
     <ClInclude Include="..\src\elements\QRcode.h" />
+    <ClInclude Include="..\src\gesture\Gesture.h" />
+    <ClInclude Include="..\src\gesture\OneFinger.h" />
+    <ClInclude Include="..\src\gesture\PalmsGesture.h" />
+    <ClInclude Include="..\src\gesture\TwoFingers.h" />
     <ClInclude Include="..\src\kinect\KinectAdapter.h" />
+    <ClInclude Include="..\src\locations\HowToUse.h" />
     <ClInclude Include="..\src\locations\Instruction.h" />
     <ClInclude Include="..\src\locations\Location.h" />
     <ClInclude Include="..\src\locations\LocationEngine.h" />
@@ -191,7 +216,9 @@
     <ClInclude Include="..\src\locations\modes\Head3DScreen.h" />
     <ClInclude Include="..\src\locations\modes\ModeBaseKinect.h" />
     <ClInclude Include="..\src\locations\ReadyScreen.h" />
+    <ClInclude Include="..\src\locations\ScanFace.h" />
     <ClInclude Include="..\src\locations\ScreenshotHolder.h" />
+    <ClInclude Include="..\src\Params.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
