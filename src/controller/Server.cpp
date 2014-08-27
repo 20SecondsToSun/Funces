@@ -1,24 +1,23 @@
 #include "Server.h"
 
 using namespace mndl::curl;
+using namespace std;
+using namespace ci;
 
-std::string   Server::sendPhoto()
+void   Server::sendPhoto()
 {
-	return "";
+	serverThread = shared_ptr<thread>( new thread( bind( &Server::sendToServerImage, this ) ) );	
 }
 
-/*
-void Server::SendToServerImage(string _name )
+void Server::sendToServerImage( )
 {	
-	Params::link = "none";
+	ci::ThreadSetup threadSetup; // instantiate this if you're talking to Cinder from a secondary thread	
 
-	fs::path path = Params::getPhotosStorageDirectory();
-	DataSourceRef urlRequest =	loadFile( path / fs::path( _name ));	
+	writeImage( getAppPath() /FaceController::FACE_STORAGE_FOLDER/serverParams::savePhotoName, ScreenshotHolder::screenshotSmall );
+	DataSourceRef urlRequest =	loadFile( getAppPath()/FaceController::FACE_STORAGE_FOLDER/ fs::path( serverParams::savePhotoName ));	
 
-	Buffer bf = Buffer(urlRequest);
-	string strj = toBase64(bf) + to_string(BIG_PHOTO_HEIGHT);
-
-	string jSonstr =  Curl::postImage( SERVER"/save.php", strj);
+	string strj				 = toBase64(Buffer(urlRequest));
+	string jSonstr			 =  Curl::postImage(  serverParams::serverURL, strj);
 	
 	 if (jSonstr.length()>=1)
 	 {
@@ -30,18 +29,13 @@ void Server::SendToServerImage(string _name )
 		
 			if (success=="1")
 			{
-				console()<<"SERVER SEND ALL FUCKING DATA"<<std::endl;
-			
-				Params::sessionId = jTree.getChild("id").getValue();	
-				Params::link = jTree.getChild("link").getValue();
-			
-				Buffer buff = fromBase64(jTree.getChild("data").getValue());
-				qrCodeBlock.setTextureString(jTree.getChild("data").getValue());	
-
-				qrCodeBlock.setLink(jTree.getChild("link").getValue(), dayFont);
-				qrCodeBlock.isReady = true;
-				PhotoUploadReady = true;
+				console()<<"SERVER SEND ALL FUCKING DATA  "<<jSonstr<< std::endl;
+				link	= jTree.getChild("link").getValue();
+				buffer	 = jTree.getChild("data").getValue();
+				
 				CONNECTION_PROBLEM = false;
+				serverThread->detach();
+				serverHandler();
 				return;
 			}
 			else  CONNECTION_PROBLEM = true;
@@ -52,8 +46,8 @@ void Server::SendToServerImage(string _name )
 			 CONNECTION_PROBLEM = true;
 		}
 	 }
-
 	 console()<<"==========================  SERVER ERROR SORRY.....==============================="<<std::endl;
 	 CONNECTION_PROBLEM = true;
-}*/
-
+	 serverThread->detach();
+	 serverHandler();
+}

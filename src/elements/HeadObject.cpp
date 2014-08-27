@@ -6,6 +6,8 @@ using namespace ci::app;
 using namespace gl;
 using namespace std;
 
+
+
 ci::Vec3f HeadObject::getScale()
 {	
 	float scalePercent  = calcScalePercent(face.getTranslationTransform().z);
@@ -53,7 +55,7 @@ ci::Vec2f HeadObject::getFaceCenter()
 
 ci::Vec3f HeadObject::getScaleLeapMotion()
 {
-	return Vec3f( 1.f, 1.f, 1.f);
+	return leapScale;
 }
 
 ci::Vec4f HeadObject::getAmbientLight()
@@ -96,18 +98,18 @@ ci::Vec3f HeadObject::getXYZ()
 	return xyz;	
 }
 
-void HeadObject::setScaleLeap(Vec3f& scaleL, string grow)
+void HeadObject::setScaleLeap(string grow)
 {
 	float param = 0.025f;
 	if (grow == "BIGGER")
 	{
-		if (scaleL.x>= leapMaxScale) scaleL = Vec3f(leapMaxScale,leapMaxScale,leapMaxScale);
-		else scaleL += Vec3f(param,param, param);
+		if (leapScale.x>= leapMaxScale) leapScale = Vec3f(leapMaxScale,leapMaxScale,leapMaxScale);
+		else leapScale += Vec3f(param,param, param);
 	}
 	else if (grow == "SMALLER")
 	{
-		if (scaleL.x<= 1) scaleL = Vec3f(1,1,1);
-		else scaleL -= Vec3f(param,param, param);
+		if (leapScale.x<= 1) leapScale = Vec3f(1,1,1);
+		else leapScale -= Vec3f(param,param, param);
 	}
 }
 

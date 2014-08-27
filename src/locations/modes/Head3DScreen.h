@@ -21,9 +21,12 @@ class Head3D : public ModeBaseKinect
 		void draw() ;
 		void init() ;
 		void clean() ;
+		void save() ;
+		void setup() ;
+		void changeItem();
+		void changeSize(std::string value);
 
-	private:
-		void						calculateAspects();
+	private:		
 		void						setUpCamera();
 		void						drawHeads3D();
 		void						drawDyingHeads3D();
@@ -34,10 +37,8 @@ class Head3D : public ModeBaseKinect
 		void						onLightsForHead(HeadObject* head);
 		void						offLightsForHead();
 
-		float						viewShiftX, viewShiftY; 
-		int							viewWidth, viewHeight;
-		int							detectedPeopleInFrameNum;
-		float						headScale;
+		
+		int							detectedPeopleInFrameNum;	
 
 		ci::MayaCamUI				mMayaCam;
 

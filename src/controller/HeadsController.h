@@ -13,6 +13,7 @@ class HeadsController
 		HeadObject*					getHeadObject(int id, MsKinect::Face face);
 		HeadObject*					getHeadDyingObject(int id);
 		void						cleanHeads();
+		void						killHeadObject(int id);
 
 	private:
 	

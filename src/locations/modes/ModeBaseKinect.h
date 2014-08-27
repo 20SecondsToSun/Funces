@@ -12,7 +12,15 @@ public:
 	virtual void update() = 0;
 	virtual void init() = 0;
 	virtual void clean() = 0;	
+	virtual void save() = 0;	
+	virtual void setup() = 0;
+	virtual void changeItem() = 0;
+	virtual void changeSize(std::string value) = 0;	
+
+	static KinectAdapter*		kinect;
+
 protected:
-	static KinectAdapter*	kinect;
+	bool						isCleaned;
+
 
 };

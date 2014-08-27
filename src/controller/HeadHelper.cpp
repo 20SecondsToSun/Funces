@@ -14,10 +14,10 @@ std::vector<ModelData3D> HeadHelper::modelsVector = [] {
 	model.ext = ".3ds";
 	_modelsVector.push_back(model);	
 
-	/*model.name = headDefaults::CAT_HEAD;
+	model.name = headDefaults::CAT_HEAD;
 	_modelsVector.push_back(model);
 
-	model.name = headDefaults::PENYA_HEAD;	
+	/*model.name = headDefaults::PENYA_HEAD;	
 	_modelsVector.push_back(model);
 
 	model.name = headDefaults::ED_HEAD;	

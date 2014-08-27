@@ -9,6 +9,8 @@ void LocationEngine::Init(const char* title, ci::app::WindowRef window , int wid
 
 	l_MouseDown = mainWindow->getSignalMouseDown().connect( std::bind( &LocationEngine::MouseDown, this,std::placeholders::_1) );
 
+
+
 	//mCbMouseDrag = mWindow->getSignalMouseDrag().connect( std::bind( &SquareListener::mouseDrag, this, std::_1 ) );	
 }
 

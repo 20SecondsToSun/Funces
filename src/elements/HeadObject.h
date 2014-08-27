@@ -14,6 +14,7 @@ class HeadObject
 			mesh = &_model->mesh;
 			name =  _model->name;
 			currentAlpha = 1.f;
+			leapScale = ci::Vec3f(1.0f, 1.0f, 1.0f);
 		};
 
 		void updateFace(MsKinect::Face _face)
@@ -49,6 +50,8 @@ class HeadObject
 		ci::Vec3f getScale();
 		ci::Vec3f getRotAngle();
 		ci::Vec3f getScaleLeapMotion();
+
+		ci::Vec3f leapScale;
 		
 		model::SkinnedMeshRef* getHeadMesh();
 
@@ -69,7 +72,7 @@ class HeadObject
 		ci::Vec3f getShift(float percent);
 		ci::Vec3f getModelOrientation();
 		ci::Vec3f getXYZ();
-		void setScaleLeap(ci::Vec3f& scaleL, std::string grow);
+		void setScaleLeap( std::string grow);
 		ci::Vec3f getScaleLeapDefault();
 
 		std::string getName();

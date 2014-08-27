@@ -1,4 +1,5 @@
 #include "HeadsController.h"
+#include "cinder/Rand.h"
 
 using namespace headDefaults;
 using namespace model;
@@ -10,7 +11,7 @@ void HeadsController::initHeads()
 	for (int i = 0; i < kinectDefaults::FACES_MAX; i++)
 	{
 		player[i] = NULL;
-		playersHeadNums[i] = 0;
+		playersHeadNums[i] 	= Rand::randInt( modelsVector.size());			
 	}	
 }
 
@@ -25,6 +26,15 @@ HeadObject*	HeadsController::getHeadObject(int id, MsKinect::Face face)
 		player[id]->updateFace(face);
 	
 	return player[id];
+}
+
+void	HeadsController::killHeadObject(int id)
+{
+	if (player[id] != NULL)
+	{
+		delete player[id];
+		player[id] = NULL;	
+	}
 }
 
 HeadObject*	HeadsController::getHeadDyingObject(int id)
@@ -57,6 +67,5 @@ ModelData3D*	HeadsController::chooseNewHead(int id)
 void	HeadsController::cleanHeads()
 {
 	for (int i = 0; i < kinectDefaults::FACES_MAX; i++)	
-		if (player[i] != NULL)
-			delete player[i];		
+		killHeadObject(i);
 }

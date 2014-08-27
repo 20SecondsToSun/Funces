@@ -17,7 +17,8 @@ typedef ci::Vec3f USER_HEAD[2];
 namespace kinectDefaults
 {
 	const int  FACES_MAX					    = 2;
-	const NUI_IMAGE_RESOLUTION COLOR_RESOLUTION = MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_640x480;//MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_1280x960
+	const NUI_IMAGE_RESOLUTION COLOR_RESOLUTION = MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_640x480;
+	//const NUI_IMAGE_RESOLUTION COLOR_RESOLUTION = MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_1280x960;
 	const NUI_IMAGE_RESOLUTION DEPTH_RESOLUTION = MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_640x480;//MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_1280x960
 
 	const float   MIN_DEPTH						= 0.8f;
@@ -30,7 +31,7 @@ class KinectAdapter
 		void Setup();	
 		void Shutdown();	
 
-		void update();
+		void Update();
 		void draw();
 
 		static KinectAdapter* Instance() {
@@ -41,6 +42,7 @@ class KinectAdapter
 		ci::gl::TextureRef getDepthTexRef();
 
 		bool				isFaceDetected(int i);
+		bool				isFaceDetected();
 		int					getFacesDetectedNum();
 
 		Rectf				getColorResolutionRectf();
@@ -51,6 +53,23 @@ class KinectAdapter
 		int					maxFaces(){ return kinectDefaults::FACES_MAX;};
 
 		MsKinect::Face		getFace(int i);
+
+		ci::gl::Texture		getColorTex();		
+		ci::Surface8u	    getSurface8u();
+
+		int					getLeftFaceID(); 
+		int					getRightFaceID() ;
+
+		std::vector<ci::Vec2i>	getHandsPosition();
+
+		void				handsSleep(int seconds);
+		void				faceSleep(int seconds);
+
+		void				drawKinectCameraColorSurface();
+		void				calculateAspects();	
+		float				viewShiftX, viewShiftY; 
+		float				headScale;
+		int					viewWidth, viewHeight;
 
 	protected:
 		KinectAdapter() { }
@@ -64,7 +83,10 @@ class KinectAdapter
 		MsKinect::Frame				mFrame;	
 
 		ci::gl::TextureRef			mTextureColor;
+		ci::gl::Texture				_mTextureColor;
+
 		ci::gl::TextureRef			mTextureDepth;
+		
 
 		int							SKELETS_IN_FRAME;
 		// Face	
@@ -73,8 +95,19 @@ class KinectAdapter
 		USER_HEAD					userheadPoints[kinectDefaults::FACES_MAX];
 
 		void						kinectConnect();
+		void						faceTrackStart();
 		void						updateSkeletonData();	
 
 		bool						_isFaceDetected[kinectDefaults::FACES_MAX];
 		int							_facesDetectedNum;
+
+		ci::Surface8u				 surface8u;
+
+		vector<Vec2i>				 handsPosition;
+
+		int							 handsSleepSeconds, faceSleepSeconds;
+		Timer						 handsSleepTimer, faceSleepTimer;
+		
+		
+
 };

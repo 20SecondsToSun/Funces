@@ -1,41 +1,58 @@
 #include "ReadyScreen.h"
-#include "MainGame.h"
-
 
 using namespace ci;
 using namespace ci::app;
 using namespace ReadyScreenDefaults;
 
+using namespace funces;
+
 ReadyScreen ReadyScreen::ReadyScreenState;
+LeapController* ReadyScreen::leap	= LeapController::Instance();
 
 void ReadyScreen::Setup()
 {
-	for (int i = 1; i <= FONS_SCREENS_NUM; i++)
-	{
+	for (int i = 1; i <= FONS_SCREENS_NUM; i++)	
 		fonImgVector.push_back(AssetManager::getInstance()->getTexture("images/fons/bg"+to_string(i)+".jpg"));
-	}
+	
 	qrCode.setup();
-
 }
 
 void ReadyScreen::Init( LocationEngine* game)
 {
 	currentFon				= Rand::randInt(FONS_SCREENS_NUM);	
-	screnshot = ScreenshotHolder::screenshot;
+	screnshot				= ScreenshotHolder::screenshot;
+	ScreenshotHolder::resize();
 
-	state = FLASH;		
-	timeline().apply( &alphaFlash, 1.0f, 0.0f, 0.7f, EaseOutQuad() ).delay(0.2f).finishFn( bind( &ReadyScreen::animationFlashFinish, this )  );	
+	alphaFade = 0.0f;
 	
+	qrCode.init();	
+	leap->resetInitParams();	
+
+	serverSignalCon = server.serverHandler.connect( 
+			boost::bind(&ReadyScreen::serverSignal, this) 
+		);
+
+	
+	isServerFinishHisWork =false;
+
+	#ifdef DEBUG
+		isServerFinishHisWork = true;
+	#endif
+
+	state = FLASH;	
+	_game = game;
+
+	timeline().apply( &alphaFlash, 1.0f, 0.0f, 0.7f, EaseOutExpo() ).delay(0.2f).finishFn( bind( &ReadyScreen::animationFlashFinish, this )  );	
 }
 
 void ReadyScreen::Shutdown()
 {
-	
+	serverSignalCon.disconnect();
 }
 
 void ReadyScreen::Cleanup()
 {
-	
+	serverSignalCon.disconnect();
 }
 
 void ReadyScreen::Pause()
@@ -51,10 +68,20 @@ void ReadyScreen::MouseEvents( LocationEngine* game )
 {
 	MouseEvent event = game->getMouseEvent();	
 
-	if(game->isAnimationRunning()) return;	
+	if(game->isAnimationRunning()) return;		
 
-	game->ChangeState(MainGame::Instance());
-	
+	#ifdef DEBUG
+
+	if (event.isLeftDown())
+	{
+		if (backToStart.isDown(event.getPos()))
+		{
+			game->ChangeState(ScanFace::Instance());
+		}
+		else game->ChangeState(MainGame::Instance());
+	}
+
+	#endif
 }
 
 void ReadyScreen::HandleEvents( LocationEngine* game )
@@ -62,8 +89,21 @@ void ReadyScreen::HandleEvents( LocationEngine* game )
 }
 
 void ReadyScreen::Update(LocationEngine* game) 
-{	
-		
+{
+	if (!isServerFinishHisWork) return;
+
+	std::string gesture  = leap->getLastGestureName();	
+	
+	if ( gesture== leapGestures::TWO_FINGERS)
+	{
+		gotoLocation = MainGame::Instance();
+		timeline().apply( &alphaFade, 0.0f, 1.0f, 0.3f, EaseOutQuad() ).finishFn( bind( &ReadyScreen::animationOutFinish, this ) );		
+	}
+	else if (gesture == leapGestures::ONE_FINGER)
+	{
+		gotoLocation = Instruction::Instance();
+		timeline().apply( &alphaFade, 0.0f, 1.0f, 0.3f, EaseOutQuad() ).finishFn( bind( &ReadyScreen::animationOutFinish, this ) );	
+	}	
 }
 
 void ReadyScreen::Draw(LocationEngine* game) 
@@ -88,15 +128,21 @@ void ReadyScreen::Draw(LocationEngine* game)
 				gl::scale(startPhotoScale);
 				gl::translate(startPhotoXY);	
 				gl::draw(screnshot);
-			gl::popMatrices();
+			gl::popMatrices();			
+			qrCode.draw();	
 
-			qrCode.draw();			
+			gl::color(ColorA(0, 0, 0, alphaFade));
+			gl::drawSolidRect(Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 
 			break;
 
 		case LOAD_TO_SERVER:
 			break;
 	}	
+
+	#ifdef DEBUG
+		backToStart.draw();
+	#endif
 
 	gl::disableAlphaBlending();
 }
@@ -112,5 +158,29 @@ void ReadyScreen::animationFlashFinish()
 
 void ReadyScreen::animationLastFinish() 
 {
-	server.sendPhoto();
+	#ifndef DEBUG
+		server.sendPhoto();
+	#endif
+}
+
+void ReadyScreen::serverSignal()
+{
+	if (server.isResponseOK())
+	{
+		qrCode.setTextureString(server.getBuffer());
+		qrCode.setLink(server.getLink());
+		qrCode.isReady = true;
+		qrCode.isError = false;
+	}
+	else
+	{
+		qrCode.isError = true;
+	}
+
+	isServerFinishHisWork = true;	
+}
+
+void ReadyScreen::animationOutFinish()
+{
+	_game->ChangeState(gotoLocation);
 }

@@ -14,6 +14,12 @@
 #include "AssetsManager.h"
 #include "QRcode.h"
 #include "Server.h"
+#include "ChangeModeButton.h"
+#include "LeapController.h"
+#include "MainGame.h"
+#include "ScanFace.h"
+#include "Instruction.h"
+#include "Params.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -25,9 +31,6 @@ namespace ReadyScreenDefaults
 	const int  FONS_SCREENS_NUM					    = 6;
 	enum states { FLASH, SCREESHOT_ANIM, LOAD_TO_SERVER, BLOCK };
 }
-
-
-
 class ReadyScreen : public Location
 {
 
@@ -56,13 +59,13 @@ private:
 	void							MouseEvents( LocationEngine* game );
 	void							animationFlashFinish();
 	void							animationLastFinish();
+	void							animationOutFinish();
 
 	LocationEngine*					_game;
 	static ReadyScreen				ReadyScreenState;
 	
-	Texture*						logoTexture, *helloTexture;
-	
-	ci::Anim<float>					alphaHelloTex;
+	Texture*						logoTexture, *helloTexture;	
+	ci::Anim<float>					alphaFade;
 	std::vector< ci::gl::Texture*>  fonImgVector;
 	int								currentFon;
 
@@ -76,4 +79,16 @@ private:
 	QRcode							qrCode;
 
 	Server							server;
+
+	ChangeModeButton				backToStart ;
+
+	void							serverSignal();
+
+	ci::signals::connection			serverSignalCon;
+
+	static LeapController*			leap;
+
+	bool							isServerFinishHisWork;
+
+	Location						*gotoLocation;
 };

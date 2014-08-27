@@ -2,16 +2,20 @@
 
 using namespace model;
 
-void Head3D::init() 
-{		
-	calculateAspects();
+void Head3D::setup() 
+{
+	kinect->calculateAspects();
 	setUpCamera();
+}
+
+void Head3D::init() 
+{	
 	headsController.initHeads();
 }
 
 void Head3D::clean() 
 {
-	headsController.cleanHeads();
+	headsController.cleanHeads();	
 }
 
 void Head3D::update() 
@@ -23,25 +27,7 @@ void Head3D::draw()
 {
 	detectedPeopleInFrameNum = kinect->getSkeletsInFrame();
 
-	gl::clear();
-	gl::setMatricesWindow( getWindowSize());
-	gl::enableAlphaBlending();
-
-	TextureRef colorRef =  kinect->getColorTexRef();
-
-	if (colorRef)
-	{
-		gl::enable( GL_TEXTURE_2D );	
-
-		gl::color( ColorAf::white() );
-		
-		gl::pushMatrices();
-			gl::translate(viewShiftX, viewShiftY);	
-			gl::draw( colorRef, colorRef->getBounds(), Rectf(0, 0, float(viewWidth),float(viewHeight)));	
-		gl::popMatrices();		
-
-		gl::disable( GL_TEXTURE_2D );
-	}
+	kinect->drawKinectCameraColorSurface();
 	
 	drawHeads3D();
 }
@@ -56,7 +42,8 @@ void Head3D::drawHeads3D()
 		{
 			MsKinect::Face face = kinect->getFace(i);
 			HeadObject *head	= headsController.getHeadObject(i, face);
-			drawHead(head);
+			if (head != NULL)
+				drawHead(head);
 		}
 		else
 		{
@@ -166,28 +153,6 @@ void Head3D::offLightsForHead()
 	ci::gl::disable( GL_CULL_FACE );	
 }
 
-void Head3D::calculateAspects()
-{
-	Rectf kinectResolutionR = kinect->getColorResolutionRectf();
-	float aspect =  kinectResolutionR.getWidth()/kinectResolutionR.getHeight();
-			
-	if( getWindowWidth() / getWindowHeight() > aspect)			
-	{
-		viewHeight = getWindowHeight();
-		viewWidth = int(viewHeight * aspect);	
-		headScale = viewHeight/ kinectResolutionR.getHeight();
-	}
-	else 
-	{ 
-		viewWidth = getWindowWidth();
-		viewHeight = int(viewWidth / aspect);	
-		headScale  = viewWidth/ kinectResolutionR.getWidth();
-	}
-	
-	viewShiftX =float( 0.5 * (getWindowWidth()  - viewWidth));
-	viewShiftY= float( 0.5 * (getWindowHeight() - viewHeight));		
-}
-
 void Head3D::setUpCamera()
 {
 	Vec3f mEye        = Vec3f( 0,0,500);
@@ -208,7 +173,7 @@ void Head3D::set3DLensShift(HeadObject* head )
 	Rectf worldCoords	 = Rectf(0.0f, 0.0f, float(getWindowWidth()), float(getWindowHeight()));
 	Rectf kinectCoords	 = kinect->getColorResolutionRectf();	
 
-	float _xPercent = ((head->getFaceCenter().x/kinectCoords.getWidth())*viewWidth+viewShiftX)/ worldCoords.getWidth();
+	float _xPercent = ((head->getFaceCenter().x/kinectCoords.getWidth())*kinect->viewWidth+kinect->viewShiftX)/ worldCoords.getWidth();
 	float _xInWorld = _xPercent*worldCoords.getWidth();
 	float lensSdvigX;
 
@@ -223,7 +188,7 @@ void Head3D::set3DLensShift(HeadObject* head )
 
 	float scalePercent = head->calcScalePercent();
 	float _y = head->getShift(scalePercent).y;
-	float _yPercent = (((head->getFaceCenter().y + _y)/kinectCoords.getHeight())*viewHeight +viewShiftY)/worldCoords.getHeight();
+	float _yPercent = (((head->getFaceCenter().y + _y)/kinectCoords.getHeight())*kinect->viewHeight +kinect->viewShiftY)/worldCoords.getHeight();
 	float _yInWorld = _yPercent*worldCoords.getHeight();
 
 	float lensSdvigY;
@@ -240,4 +205,67 @@ void Head3D::set3DLensShift(HeadObject* head )
 	CameraPersp cam = mMayaCam.getCamera();
 	cam.setLensShift(Vec2f(lensSdvigX, lensSdvigY));
 	mMayaCam.setCurrentCam( cam );	
+}
+
+void Head3D::save()
+{
+
+}
+
+void Head3D::changeItem()
+{
+	HeadObject *head;
+
+	int idToChanage = -1;
+
+	if (kinect->isFaceDetected(0) && kinect->isFaceDetected(1))
+	{
+		idToChanage = kinect->getLeftFaceID();
+	}
+	else if (kinect->isFaceDetected(0))
+	{
+		idToChanage = 0;
+	}
+	else if (kinect->isFaceDetected(1))
+	{
+		idToChanage = 1;
+	}
+
+	if(idToChanage!=-1)
+	{
+		MsKinect::Face face = kinect->getFace(idToChanage);
+		headsController.killHeadObject(idToChanage);
+		head	= headsController.getHeadObject(idToChanage, face);
+	}
+}
+
+
+void Head3D::changeSize(std::string value)
+{
+
+	HeadObject *head;
+
+	int idToChanage = -1;
+
+	if (kinect->isFaceDetected(0) && kinect->isFaceDetected(1))
+	{
+		idToChanage = kinect->getLeftFaceID();
+	}
+	else if (kinect->isFaceDetected(0))
+	{
+		idToChanage = 0;
+	}
+	else if (kinect->isFaceDetected(1))
+	{
+		idToChanage = 1;
+	}
+
+	if(idToChanage!=-1)
+	{
+		MsKinect::Face face = kinect->getFace(idToChanage);
+		head	= headsController.getHeadObject(idToChanage, face);
+
+		head->setScaleLeap(value);
+	}
+
 }
