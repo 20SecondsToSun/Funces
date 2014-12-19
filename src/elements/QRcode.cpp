@@ -36,8 +36,9 @@ void QRcode::draw()
 			}
 			else
 			{
-				if (isRender == false)
-				{
+				if(stringQrcode=="") return;
+				//if (isRender == false)
+				//{
 					isRender = true;		
 					qrCodeTexture = loadImageFromString(stringQrcode);
 
@@ -46,7 +47,7 @@ void QRcode::draw()
 					simple.setColor( Color( 1, 1, 1 ) );
 					simple.addLine(url);
 					qrCodeTextTexture = gl::Texture( simple.render( true, false ) );
-				}
+				//}
 
 				if(qrCodeTextTexture)
 				{
@@ -59,7 +60,7 @@ void QRcode::draw()
 				if(qrCodeTexture)
 				{
 					gl::pushMatrices();			
-					gl::translate(56, 474);		
+					gl::translate(86, 505);		
 					gl::draw(qrCodeTexture);
 					gl::popMatrices();
 				}

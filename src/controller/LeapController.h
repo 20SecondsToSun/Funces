@@ -22,6 +22,7 @@ namespace leapGestures{
 	const std::string    SMALLER	   =  "SMALLER";
 	const std::string    NONE		   =  "NONE";
 	const std::string    HAND_OVER	   =  "HAND_OVER";	
+	const std::string    CIRCLE	       =  "CIRCLE";	
 	
 }
 

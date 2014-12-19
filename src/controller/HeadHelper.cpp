@@ -6,9 +6,9 @@ std::vector<ModelData3D> HeadHelper::modelsVector = [] {
 
 	ModelData3D model;
 
-	/*model.name = headDefaults::BRIDE_HEAD;
-	model.ext = ".dae";
-	_modelsVector.push_back(model);*/
+	//model.name = headDefaults::BRIDE_HEAD;
+	//model.ext = ".dae";
+	//_modelsVector.push_back(model);
 
 	model.name = headDefaults::PANDA_HEAD;
 	model.ext = ".3ds";
@@ -36,7 +36,7 @@ std::vector<ModelData3D> HeadHelper::modelsVector = [] {
 	_modelsVector.push_back(model);
 
 	model.name = headDefaults::BENDER_HEAD;	
-	_modelsVector.push_back(model);*/	
+	_modelsVector.push_back(model);	*/
 
     return _modelsVector;
 

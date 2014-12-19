@@ -84,7 +84,7 @@ private:
 	ci::gl::Texture textTexture;
 	ci::gl::Texture photoramka;
 	
-	void setGraphObject(ci::gl::Texture tex, std::string _property, ci::Vec2f _value );
+	void setGraphObject(ci::gl::Texture tex,  ci::Vec2f _value );
 	ci::Vec2f getCenterOfScreen(ci::gl::Texture tex );
 
 	int			RULES_SCREENS_NUM ;

@@ -43,4 +43,6 @@ class Head3D : public ModeBaseKinect
 		ci::MayaCamUI				mMayaCam;
 
 		HeadsController             headsController;
+
+		ci::Font					debugFont;
 };

@@ -20,7 +20,6 @@
 #include "ChangeModeButton.h"
 #include "LeapController.h"
 
-
 using namespace ci;
 using namespace ci::app;
 using namespace gl;
@@ -78,11 +77,10 @@ private:
 	Head3D*					headRef;
 	myFaceScreen::Face*     faceRef;
 
-	bool					makeScreenShotAndGo;
-
-	
+	bool					makeScreenShotAndGo;	
 
 	void					changeState( );
 
 	std::string				gameModeID;
+
 };

@@ -82,6 +82,13 @@ void ReadyScreen::MouseEvents( LocationEngine* game )
 	}
 
 	#endif
+
+	if (event.isLeftDown())
+	{
+		gotoLocation = Instruction::Instance();
+		timeline().apply( &alphaFade, 0.0f, 1.0f, 0.3f, EaseOutQuad() ).finishFn( bind( &ReadyScreen::animationOutFinish, this ) );	
+	}
+
 }
 
 void ReadyScreen::HandleEvents( LocationEngine* game )
@@ -93,16 +100,16 @@ void ReadyScreen::Update(LocationEngine* game)
 	if (!isServerFinishHisWork) return;
 
 	std::string gesture  = leap->getLastGestureName();	
-	
+
 	if ( gesture== leapGestures::TWO_FINGERS)
 	{
 		gotoLocation = MainGame::Instance();
-		timeline().apply( &alphaFade, 0.0f, 1.0f, 0.3f, EaseOutQuad() ).finishFn( bind( &ReadyScreen::animationOutFinish, this ) );		
+		timeline().apply( &alphaFade, 0.0f, 1.0f, 0.8f, EaseOutQuad() ).finishFn( bind( &ReadyScreen::animationOutFinish, this ) );		
 	}
 	else if (gesture == leapGestures::ONE_FINGER)
 	{
 		gotoLocation = Instruction::Instance();
-		timeline().apply( &alphaFade, 0.0f, 1.0f, 0.3f, EaseOutQuad() ).finishFn( bind( &ReadyScreen::animationOutFinish, this ) );	
+		timeline().apply( &alphaFade, 0.0f, 1.0f, 0.8f, EaseOutQuad() ).finishFn( bind( &ReadyScreen::animationOutFinish, this ) );	
 	}	
 }
 
@@ -112,6 +119,7 @@ void ReadyScreen::Draw(LocationEngine* game)
 	gl::enableAlphaBlending();
 
 	Rectf centeredRect = Rectf( fonImgVector[currentFon]->getBounds() ).getCenteredFit( getWindowBounds(),true );
+	//console()<<"  alphaFade  "<<alphaFade<<endl;
 	switch (state)
 	{
 		case FLASH:
@@ -129,10 +137,12 @@ void ReadyScreen::Draw(LocationEngine* game)
 				gl::translate(startPhotoXY);	
 				gl::draw(screnshot);
 			gl::popMatrices();			
-			qrCode.draw();	
+			if (alphaFade<=0)qrCode.draw();	
 
+			//console()<<"   alphafade  "<<alphaFade<<endl;
 			gl::color(ColorA(0, 0, 0, alphaFade));
 			gl::drawSolidRect(Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+			gl::color(Color(1, 1, 1));
 
 			break;
 
@@ -168,12 +178,14 @@ void ReadyScreen::serverSignal()
 	if (server.isResponseOK())
 	{
 		qrCode.setTextureString(server.getBuffer());
+		console()<<"link  :::::::::::::::::::::::::"<<server.getLink()<<endl;;
 		qrCode.setLink(server.getLink());
 		qrCode.isReady = true;
 		qrCode.isError = false;
 	}
 	else
 	{
+		console()<<"error  :::::::::::::::::::::::::"<<endl;;
 		qrCode.isError = true;
 	}
 

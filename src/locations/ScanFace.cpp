@@ -1,4 +1,5 @@
 #include "ScanFace.h"
+#include "HowToUse.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -251,7 +252,7 @@ void ScanFace::renderFaceToFbo()
 
 void ScanFace::animationFadeOutFinish()
 {
-	_game->ChangeState(MainGame::Instance());
+	_game->ChangeState(HowToUse::Instance());
 }
 void ScanFace::animationFadeInFinish()
 {

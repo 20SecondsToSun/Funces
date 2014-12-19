@@ -10,8 +10,10 @@ void KinectAdapter::Setup()
 	deviceOptions.enableDepth(true);
 	deviceOptions.setDepthResolution(DEPTH_RESOLUTION);
 	deviceOptions.setColorResolution(COLOR_RESOLUTION);
-
+	deviceOptions.setSkeletonSelectionMode(MsKinect::SkeletonSelectionMode::SkeletonSelectionModeClosest2);	
 	mDevice = MsKinect::Device::create();
+
+	
 
 	mDevice->connectEventHandler( [ & ]( MsKinect::Frame frame )
 	{
@@ -164,7 +166,7 @@ void KinectAdapter::updateSkeletonData()
 			if(mFrame.getSkeletons().at(i).find(headJoint) != mFrame.getSkeletons().at(i).end())
             {
 				const MsKinect::Bone& headBone = mFrame.getSkeletons().at(i).find(headJoint)->second;
-				auto  startV3 = mFrame.getSkeletons().at(i).at( headBone.getStartJoint()).getPosition();
+				auto  startV3				   = mFrame.getSkeletons().at(i).at( headBone.getStartJoint()).getPosition();
 				auto  endtV3 = mFrame.getSkeletons().at(i).at( headBone.getEndJoint()).getPosition();		
 
 				userheadPoints[SKELETS_IN_FRAME][0] = startV3;

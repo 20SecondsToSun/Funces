@@ -20,6 +20,7 @@ void HowToUse::Setup()
 	pause = 0;
 	_scale = Vec2f(0.6f,0.6f);
 
+	fon2   = gl::Texture(loadImage(getAssetPath("rules/_fon2.png")));
 	fon3   = gl::Texture(loadImage(getAssetPath("rules/_fon3.png")));
 	fon4   = gl::Texture(loadImage(getAssetPath("rules/_fon4.png")));
 	
@@ -105,24 +106,30 @@ void HowToUse::Update(LocationEngine* game)
 			coord4 = Vec2f(0.0f, 0.0f);			
 			coordMike = Vec2f((getWindowWidth() - 404)*0.5f+ 20.0f, (getWindowBounds().getHeight() - 431)*0.5);
 			timeline().apply( &alphaFade, 1.0f, 0.0f, 0.3f, EaseOutQuad() );
+			gestureAnimIndex = 0;
+			pause = 0;
 			state = WAITING_FOR_WAVE;
+			
 		break;
 
 		case WAITING_FOR_WAVE:	
 			
-			if( leap->getLastGestureName()  == SWIPE_LEFT || leap->getLastGestureName()  == SWIPE_RIGHT)
+			if( leap->getLastGestureName()  == SWIPE_LEFT || leap->getLastGestureName()  == SWIPE_RIGHT|| leap->getLastGestureName()  == CIRCLE )
 			{
-				if (swipeBuffer < 1) 
+				/*if (swipeBuffer < 1) 
 				{
 					swipeBuffer++;
 					return ;
 				}
 				else
-				{
+				{*/
+				    gestureAnimIndex = 0;
+					pause = 0;
 					state = CHANGE_HERO;
 					timeline().apply( &alpha, ColorA(1.0f, 1.0f, 1.0f, 1.0f), ColorA(1.0f, 1.0f, 1.0f, 0.0f), 0.8f, EaseOutCubic() ).finishFn( bind( &HowToUse::animationChangeHeroFinish, this ) );
 					timeline().apply( &coord3,Vec2f(0,0), Vec2f(-getWindowBounds().getWidth(),0), 0.8f, EaseOutCubic() );
-				}			
+
+				//}			
 			}
 			
 		break;
@@ -177,8 +184,9 @@ void HowToUse::Draw(LocationEngine* game)
 {
 	gl::enableAlphaBlending();
 	gl::clear(); 	
-	gl::color( ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
-	Rectf centeredRect = Rectf( fon1.getBounds() ).getCenteredFit( getWindowBounds(),true );
+	gl::color( Color::white() );
+	Rectf centeredRect = Rectf( fon3.getBounds() ).getCenteredFit( getWindowBounds(),true );
+
 
 	Vec2f t = getCenterOfScreen(trans);
 	Vec2f _roboCoord;
@@ -186,42 +194,71 @@ void HowToUse::Draw(LocationEngine* game)
 	switch(state)
 	{		
 		case WAITING_FOR_WAVE:
-			gl::color( ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
+			gl::color( Color::white() );
 			gl::draw( fon2, centeredRect);
 
-			gl::pushMatrices();	
-				gl::translate(0,getWindowHeight()-gestureTex.getBounds().getHeight());
-				gl::draw( gestureTex);
-			gl::popMatrices();
-
-			gl::pushMatrices();	
-				gl::translate(coord4);
-				gl::draw( slide3, centeredRect);
-			gl::popMatrices();
-		
-			setGraphObject(mike, "coord", coordMike);
-			setGraphObject(how, "coord", coord2);
+			setGraphObject(gestureTex, Vec2f(0, getWindowHeight()-gestureTex.getBounds().getHeight()));				
+			setGraphObject( slide3, coord4);		
+			setGraphObject(mike, coordMike);
+			setGraphObject(how,  coord2);
 
 			gl::color(ColorA(0, 0, 0, alphaFade));
 			gl::drawSolidRect(Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 
+			gl::color(  Color::white() );
+			gl::pushMatrices();	
+				gl::translate((getWindowWidth() -gesture1[0].getBounds().getWidth())*0.5,getWindowHeight()-gesture1[0].getBounds().getHeight()+10);
+				////gestureAnimIndex++;
+				//if (gestureAnimIndex>12)
+				//{
+				//	gestureAnimIndex=0;
+				//	pause = 5;
+				//}
+				////if (getElapsedFrames() % (12)==0)
+				////{
+				//if (pause>0) pause--;			
+
+				//if (pause == 1 ) gestureAnimIndex = 0;
+				//if (pause == 0 )
+				//{
+				//	gestureAnimIndex += 1;
+				//	if (gestureAnimIndex>=1) 
+				//	{
+				//		//gestureAnimIndex=0;
+				//		pause = 5;
+				//	}	
+
+
+				//}				
+				gl::draw( gesture1[0]);
+					
+
+			gl::popMatrices();
+
+
+
 		break;
 
 		case CHANGE_HERO:
-			gl::color( ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
+			gl::color(  Color::white());
 			gl::draw( fon3, centeredRect);
 
 			gl::color( alpha );
 			gl::draw( fon2, centeredRect);			
 
-			gl::color( ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
+			gl::color(  Color::white() );
 
-			gl::pushMatrices();	
+			gl::pushMatrices();					
+				setGraphObject( slide3, coord3);
 				gl::translate(coord3);
-				gl::draw( slide3, centeredRect);
-				setGraphObject(mike, "coord", coordMike);
+				gl::pushMatrices();	
+					gl::translate(coordMike);
+					
+					gl::draw( mike);
+				gl::popMatrices();
+
+				setGraphObject(slide4, Vec2f(getWindowBounds().getWidth(),0));
 				gl::translate(Vec2f(getWindowBounds().getWidth(),0));
-				gl::draw(slide4, centeredRect);
 				gl::pushMatrices();				
 					gl::scale(_scale);
 					gl::translate( getWindowWidth() *0.5* (1/_scale.x)- trans.getBounds().getWidth()*0.5, getWindowHeight()*0.5* (1/_scale.y) - trans.getBounds().getHeight()*0.5);
@@ -229,13 +266,29 @@ void HowToUse::Draw(LocationEngine* game)
 				gl::popMatrices();
 			gl::popMatrices();
 
-			setGraphObject(how, "coord", coord2);
-			setGraphObject(gestureTex, "coord", Vec2f(0,getWindowHeight()-gestureTex.getBounds().getHeight()));
+			setGraphObject(how,  coord2);
+			setGraphObject(gestureTex,  Vec2f(0,getWindowHeight()-gestureTex.getBounds().getHeight()));
+
+			gl::color(  Color::white() );
+
+
+			//gl::pushMatrices();	
+				//gl::translate((getWindowWidth() -gesture3[0].getBounds().getWidth())*0.5,getWindowHeight()-gesture3[0].getBounds().getHeight()+10);
+		
+				//gl::draw( gesture1[gestureAnimIndex]);
+
+		//	gl::popMatrices();
+
+
+
+
+
+
 
 		break;
 
 		case WAITING_FOR_ZOOM:
-			gl::color( ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
+			gl::color(  Color::white() );
 			gl::draw( fon3, centeredRect);
 			gl::draw( slide4, centeredRect);
 			
@@ -245,12 +298,12 @@ void HowToUse::Draw(LocationEngine* game)
 				gl::draw(trans);
 			gl::popMatrices();
 
-			setGraphObject(how, "coord", coord2);
-			setGraphObject(gestureTex, "coord", Vec2f(0,getWindowHeight() - gestureTex.getBounds().getHeight()));
+			setGraphObject(how,  coord2);
+			setGraphObject(gestureTex, Vec2f(0,getWindowHeight() - gestureTex.getBounds().getHeight()));
 
 			gl::pushMatrices();	
 				gl::translate((getWindowWidth() -gesture2[0].getBounds().getWidth())*0.5,getWindowHeight()-gesture2[0].getBounds().getHeight()+10);
-				if (getElapsedFrames() % (20)==0)
+			/*	if (getElapsedFrames() % (20)==0)
 				{
 					if (pause>0) pause--;			
 
@@ -260,12 +313,12 @@ void HowToUse::Draw(LocationEngine* game)
 						gestureAnimIndex += sign;
 						if (gestureAnimIndex>=1) 
 						{
-							//gestureAnimIndex=0;
+							gestureAnimIndex=0;
 							pause = 5;
 						}											
 					}				
-				}
-				gl::draw( gesture2[gestureAnimIndex]);
+				}*/
+				gl::draw( gesture2[0]);
 
 			gl::popMatrices();
 
@@ -274,22 +327,18 @@ void HowToUse::Draw(LocationEngine* game)
 		case ZOOM_FINISHED:
 		case WAITING_FOR_TWO_FINGERS:
 			
-			gl::color( ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
+			gl::color(  Color::white() );
 			gl::draw( fon4, centeredRect);
 
 			gl::color( alpha );
 			gl::draw( fon3, centeredRect);			
 
-			gl::color( ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
-			gl::pushMatrices();	
-				gl::translate(coord3);
-				gl::draw( slide4, centeredRect);			
-			gl::popMatrices();
-			setGraphObject(how, "coord", coord2);
-			setGraphObject(gestureTex, "coord", Vec2f(0,getWindowHeight() - gestureTex.getBounds().getHeight()));
-
-			setGraphObject(photoramka, "coord", coordPhotoRamka);
-			setGraphObject(slide5, "coord", coordLastFrameText);
+			gl::color(  Color::white() );		
+			setGraphObject( slide4, coord3);		
+			setGraphObject(how, coord2);
+			setGraphObject(gestureTex, Vec2f(0,getWindowHeight() - gestureTex.getBounds().getHeight()));
+			setGraphObject(photoramka, coordPhotoRamka);
+			setGraphObject(slide5, coordLastFrameText);
 
 			gl::pushMatrices();				
 				gl::scale(roboScale);
@@ -301,6 +350,17 @@ void HowToUse::Draw(LocationEngine* game)
 
 			gl::color(ColorA(0, 0, 0, alphaFade));
 			gl::drawSolidRect(Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+
+
+			gl::color(Color::white());
+			gl::pushMatrices();	
+				gl::translate((getWindowWidth() -gesture3[0].getBounds().getWidth())*0.5,getWindowHeight()-gesture3[0].getBounds().getHeight()+10);
+			
+				gl::draw( gesture3[0]);
+
+			gl::popMatrices();
+
+
 		break;
 	}
 
@@ -327,13 +387,12 @@ void HowToUse::animationFadeOutFinish()
 	_game->ChangeState(MainGame::Instance());
 }
 
-void HowToUse::setGraphObject(ci::gl::Texture tex, string _property,Vec2f _value )
+void HowToUse::setGraphObject(ci::gl::Texture tex, Vec2f _value )
 {
 	gl::pushMatrices();	
 			gl::translate(_value);
 			gl::draw( tex);
 	gl::popMatrices();
-
 }
 
 Vec2f HowToUse::getCenterOfScreen(ci::gl::Texture tex )

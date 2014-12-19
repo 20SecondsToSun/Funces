@@ -25,7 +25,7 @@ class HeadObject
 
 		bool isAlive()
 		{			
-			return currentAlpha> 0.f;
+			return currentAlpha > 0.f;
 		}
 
 		void addPerish()

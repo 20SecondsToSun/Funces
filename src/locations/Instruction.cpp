@@ -1,5 +1,7 @@
 #include "Instruction.h"
 #include "MainGame.h"
+#include "HowToUse.h"
+
 
 using namespace ci;
 using namespace ci::app;
@@ -67,7 +69,7 @@ void Instruction::Update(LocationEngine* game)
 			
 		break;
 
-		case CHECK_HAND_ON_LEAP:			
+		case CHECK_HAND_ON_LEAP:
 			if( leap->getLastGestureName() != leapGestures::NONE)
 			{
 				state = HAND_DETECTED;
@@ -82,7 +84,7 @@ void Instruction::Draw(LocationEngine* game)
 	gl::enableAlphaBlending();
 	gl::clear(); 	
 	gl::color( ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
-	Rectf centeredRect = Rectf( 0,0, 1920,1080 ).getCenteredFit( getWindowBounds(),true );
+	Rectf centeredRect = Rectf( 0.0f, 0.0f, 1920.0f, 1080.0f ).getCenteredFit( getWindowBounds(),true );
 
 	switch (state)
 	{
@@ -108,13 +110,14 @@ void Instruction::Draw(LocationEngine* game)
 			gl::draw( slide2, centeredRect);
 			setGraphObject(how, coord2);
 		break;
+
 		case HAND_DETECTED:			
 			gl::draw( fon1, centeredRect);
 			gl::draw( slide2, centeredRect);
 			setGraphObject(how, coord2);
 
-			gl::color(ColorA(0.0f, 0, 0, alphaFade));
-			gl::drawSolidRect(Rectf(0, 0, getWindowWidth(), getWindowHeight()));
+			gl::color(ColorA(0.0f, 0.0f, 0.0f, alphaFade));
+			gl::drawSolidRect(Rectf(0.0f, 0.0f, getWindowWidth(), getWindowHeight()));
 			break;
 	}
 	gl::disableAlphaBlending();	
@@ -127,7 +130,7 @@ void Instruction::animationInitFinish()
 
 void Instruction::animationFadeOutFinish() 
 {
-	_game->ChangeState(ScanFace::Instance());
+	_game->ChangeState(HowToUse::Instance());
 }
 
 void Instruction::setGraphObject(ci::gl::Texture tex, Vec2f _value )

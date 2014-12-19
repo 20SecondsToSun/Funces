@@ -21,13 +21,15 @@ void LeapController::Setup()
 	// Enable all gesture types
 	Leap::Controller* controller = leapDevice->getController();
 	controller->enableGesture( Leap::Gesture::Type::TYPE_SWIPE );
+	controller->enableGesture( Leap::Gesture::Type::TYPE_CIRCLE );
+
 
 	// Write gesture config to console
 	Leap::Config config = controller->config();
 
 	// Update config to make gestures easier
-	config.setFloat( "Gesture.Swipe.MinLength", 45.0f );
-	config.setFloat( "Gesture.Swipe.MinVelocity", 300.0f );	
+	config.setFloat( "Gesture.Swipe.MinLength", 30.0f );
+	config.setFloat( "Gesture.Swipe.MinVelocity", 100.0f );	
 }
 
 void LeapController::resetInitParams()
@@ -84,10 +86,23 @@ void LeapController::Update()
 	const Leap::GestureList& gestures = leapFrame.gestures();
 	
 	if (GESTURE_ALLOW)
+	{
+		float pitch =  hands[0].palmNormal().pitch();
+		float yaw   = hands[0].palmNormal().yaw();
+		float roll  = hands[0].palmNormal().roll();
+
+
+		//console()<< " pitch  "<< pitch<<"  yaw "<<yaw<<" roll "<<roll<<endl;
+		
+
+
+		if (hands.count()==1) 
 		for ( Leap::GestureList::const_iterator iter = gestures.begin(); iter != gestures.end(); ++iter ) 
 		{		
 			const Leap::Gesture& gesture	= *iter;
 			Leap::Gesture::Type type		= gesture.type();		
+
+
 
 			if ( type == Leap::Gesture::Type::TYPE_SWIPE ) 
 			{
@@ -98,11 +113,12 @@ void LeapController::Update()
 				ci::Vec2f b	=  warpVector(gesture.position());
 
 				float x_diff =  math<float>::abs(b.x - a.x) ;
-				float y_iff =  math<float>::abs(b.y - a.y) ;			
-
-				if (y_iff > 50 || x_diff>50 )
+				float y_iff =  math<float>::abs(b.y - a.y) ;	
+				//float velX = math<float>::abs( hand.palmVelocity().x );
+				//console()<<"x_diff::::::::::::::  "<<x_diff<<endl;
+				if (y_iff > 10 || x_diff>10 )
 				{
-					sleep(1);
+					sleep(1.1);
 
 					string status;
 
@@ -118,7 +134,15 @@ void LeapController::Update()
 					return;
 				}				
 			}
+			else if ( type == Leap::Gesture::Type::TYPE_CIRCLE ) 
+			{
+				sleep(1);
+				
+				lastGestureName = "CIRCLE";
+				return;
+			}
 		}
+	}
 
 	for ( Leap::HandList::const_iterator handIter = hands.begin(); handIter != hands.end(); ++handIter )
 	{

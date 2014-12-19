@@ -41,6 +41,8 @@
 
 #include <comutil.h>
 
+#include "FaceScreen.h"
+
 namespace MsKinect
 {
 using namespace ci;
@@ -325,7 +327,7 @@ void FaceTracker::run()
 					hint[ i ] = FT_VECTOR3D( mHeadPoints[ i ].x, mHeadPoints[ i ].y, mHeadPoints[ i ].z );
 				}
 			}
-
+		
 			if ( mSuccess ) {
 				hr = mFaceTracker->ContinueTracking( &mSensorData, hint, mResult );
 			} else {
@@ -374,20 +376,23 @@ void FaceTracker::run()
 						face.mPoseMatrix.translate( t );
 						face.mPoseMatrix.scale( Vec3f::one() * scale );
 					}
-
+					
 					size_t numVertices	= mModel->GetVertexCount();
+
 							
-					if ( numAnimationUnits > 0 && numShapeUnits > 0 && numVertices > 0 ) {
-						if ( mCalcMesh ) {
+					if ( numAnimationUnits > 0 && numShapeUnits > 0 && numVertices > 0 ) 
+					{
+						if ( mCalcMesh )
+						{
 							FT_VECTOR3D* pts		= new FT_VECTOR3D[ numVertices ];
 							pts[ numVertices - 1 ]	= 0;
 							hr = mModel->Get3DShape( shapeUnits, numShapeUnits, animationUnits, numAnimationUnits, scale, rotation, translation, pts, numVertices );
 							if ( SUCCEEDED( hr ) ) {
 								for ( size_t i = 0; i < numVertices; ++i ) {
 									Vec3f v( pts[ i ].x, pts[ i ].y, pts[ i ].z );
-									face.mMesh.appendVertex( v );
+									face.mMesh.appendVertex( v );							
 								}
-
+								
 								FT_TRIANGLE* triangles	= 0;
 								UINT triangleCount		= 0;
 								hr = mModel->GetTriangles( &triangles, &triangleCount );
@@ -409,14 +414,24 @@ void FaceTracker::run()
 							if ( SUCCEEDED( hr ) ) {
 								for ( size_t i = 0; i < numVertices; ++i ) {
 									Vec2f v( pts[ i ].x + 0.5f, pts[ i ].y + 0.5f );
+									//console()<<"  numVertices  "<<numVertices<<std::endl;
 									face.mMesh2d.appendVertex( v );
+									
 								}
 
 								FT_TRIANGLE* triangles	= 0;
 								UINT triangleCount		= 0;
 								hr = mModel->GetTriangles( &triangles, &triangleCount );
 								if ( SUCCEEDED( hr ) ) {
-									for ( size_t i = 0; i < triangleCount; ++i ) {
+
+									
+								
+									//for ( size_t i = myFaceScreen::Face::lowTri ; i < myFaceScreen::Face::highTri ; ++i ) {//23
+									//	if (i == 37 ) continue;
+									//	face.mMesh2d.appendTriangle( triangles[ i ].i, triangles[ i ].j, triangles[ i ].k );
+									//}
+									for ( size_t i = 0; i < 156; ++i ) {//23
+										//if (i == 37 || i == 21) continue;
 										face.mMesh2d.appendTriangle( triangles[ i ].i, triangles[ i ].j, triangles[ i ].k );
 									}
 								}

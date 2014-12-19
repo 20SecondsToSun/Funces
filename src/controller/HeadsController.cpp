@@ -28,7 +28,7 @@ HeadObject*	HeadsController::getHeadObject(int id, MsKinect::Face face)
 	return player[id];
 }
 
-void	HeadsController::killHeadObject(int id)
+void HeadsController::killHeadObject(int id)
 {
 	if (player[id] != NULL)
 	{
@@ -54,17 +54,18 @@ HeadObject*	HeadsController::getHeadDyingObject(int id)
 	return player[id];
 }
 
-ModelData3D*	HeadsController::chooseNewHead(int id)
+ModelData3D* HeadsController::chooseNewHead(int id)
 {
 	int headID = playersHeadNums[id];
 
 	playersHeadNums[id]++;	
-	if (playersHeadNums[id] >= modelsVector.size()) playersHeadNums[id] = 0;
+	if (playersHeadNums[id] >= modelsVector.size())	
+		playersHeadNums[id] = 0;
 
 	return &modelsVector[headID];	
 }
 
-void	HeadsController::cleanHeads()
+void HeadsController::cleanHeads()
 {
 	for (int i = 0; i < kinectDefaults::FACES_MAX; i++)	
 		killHeadObject(i);

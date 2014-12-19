@@ -1,6 +1,7 @@
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/Texture.h"
+#include "LeapController.h"
 #include "LocationEngine.h"
 #include "MainGame.h"
 #include "KinectAdapter.h"
@@ -33,28 +34,39 @@ private:
 void Funces::setup()
 {	
 	setWindowSize(1920, 1080);//640*2, 480*2);
+	LeapController::Instance()->Setup();
+
+	Instruction::Instance()->Setup();
+	HowToUse::Instance()->Setup();
+
+	game.Init("init", getWindow());
+	game.ChangeState(Instruction::Instance());
+
+	//setFullScreen(true);
 
 	HeadHelper::loadHeads();
-	FaceController::loadFaces();
+	//FaceController::loadFaces();
 
 	ReadyScreen::Instance()->Setup();
 	MainGame::Instance()->Setup();
 	
 	ScanFace::Instance()->Setup();
-	Instruction::Instance()->Setup();
-	HowToUse::Instance()->Setup();
+	
 
 	KinectAdapter::Instance()->Setup();
 	LeapController::Instance()->Setup();
 
-	game.Init("init",getWindow());
-	game.ChangeState(Instruction::Instance());	
+	game.Init("init", getWindow());
+	game.ChangeState(MainGame::Instance());	
 }
 
 void Funces::update()
 {	
 	KinectAdapter::Instance()->Update();
 	LeapController::Instance()->Update();
+	std::string gesture  = LeapController::Instance()->getLastGestureName();
+	if (gesture!="NONE" && gesture!="HAND_OVER")
+		console()<<"gesture ::"<<gesture<<endl;
 
 	game.Update();
 }

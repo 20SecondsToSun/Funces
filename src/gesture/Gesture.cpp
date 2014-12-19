@@ -16,7 +16,7 @@ void Gesture::init()
 	gestureBegin = false;
 	gestureEnd = false;
 	handID = -1;
-	gestureTime = 1.2f;
+	gestureTime = 1.4f;
 }
 
 string Gesture::checkGesture(const Leap::Hand& hand, int count)

@@ -100,12 +100,12 @@ void MainGame::Update(LocationEngine* game)
 	{
 		makeScreenShotAndGo = true;
 	}
-	else if (gesture == leapGestures::ONE_FINGER)
+	/*else if (gesture == leapGestures::ONE_FINGER)
 	{
 		changeState();
 		changeGameMode();
-	}
-	else if  (gesture == leapGestures::SWIPE_LEFT || gesture == leapGestures::SWIPE_RIGHT)
+	}*/
+	else if  (/*gesture == leapGestures::SWIPE_LEFT || gesture == leapGestures::SWIPE_RIGHT||*/ gesture == leapGestures::CIRCLE)
 	{
 		gameMode->changeItem();
 	}
@@ -115,7 +115,7 @@ void MainGame::Update(LocationEngine* game)
 			gameMode->changeSize(gesture);		
 	}
 
-	KinectAdapter* kinect = KinectAdapter::Instance();
+	/*KinectAdapter* kinect = KinectAdapter::Instance();
 	for (int i = 0; i < kinect->getHandsPosition().size(); i++)
 	{
 		//gl::drawSolidCircle(kinect->getHandsPosition()[i], 10);
@@ -126,7 +126,7 @@ void MainGame::Update(LocationEngine* game)
 			changeGameMode();
 			kinect->handsSleep(2);
 		}
-	}	
+	}*/	
 }
 
 void MainGame::Draw(LocationEngine* game) 
@@ -149,7 +149,9 @@ void MainGame::Draw(LocationEngine* game)
 	}	
 
 	if (makeScreenShotAndGo == false)
-		drawChangeModeButton.draw();
+	{
+		//drawChangeModeButton.draw();
+	}
 	else
 	{
 		gotoReadyScreen();
