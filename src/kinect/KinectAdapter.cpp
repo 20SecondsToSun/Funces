@@ -1,4 +1,5 @@
 #include "KinectAdapter.h"
+#include "Params.h"
 
 using namespace kinectDefaults;
 
@@ -23,7 +24,7 @@ void KinectAdapter::Setup()
 		{
 			if ( !mFaceTracker[i] )  continue;
 			
-			if (SKELETS_IN_FRAME > 1) // IF SKELETONES IN FRAME HINT BY PASSING HEAD POINTS
+			if (SKELETS_IN_FRAME > 1 && !funces::oneHead) // IF SKELETONES IN FRAME HINT BY PASSING HEAD POINTS
 			{
 				mFaceTracker[i]->update( mFrame.getColorSurface(), mFrame.getDepthChannel(), userheadPoints[i]);
 			}

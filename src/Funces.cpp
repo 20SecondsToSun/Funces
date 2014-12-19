@@ -11,6 +11,7 @@
 #include "FaceController.h"
 #include "Instruction.h"
 #include "HowToUse.h"
+#include "Params.h"
 
 #define DEBUGMODE
 
@@ -85,6 +86,15 @@ void Funces::keyDown( KeyEvent event )
 	case KeyEvent::KEY_q:
 		quit();
 		break;
+
+	case KeyEvent::KEY_1:
+		funces::oneHead = true;
+		break;
+
+	case KeyEvent::KEY_2:
+		funces::oneHead = false;
+		break;
+
 	}
 }
 
