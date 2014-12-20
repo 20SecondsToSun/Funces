@@ -16,18 +16,20 @@ typedef ci::Vec3f USER_HEAD[2];
 
 namespace kinectDefaults
 {
-	const int  FACES_MAX					    = 2;
-	//const NUI_IMAGE_RESOLUTION COLOR_RESOLUTION = MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_640x480;
-	const NUI_IMAGE_RESOLUTION COLOR_RESOLUTION = MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_1280x960;
-	const NUI_IMAGE_RESOLUTION DEPTH_RESOLUTION = MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_640x480;//MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_1280x960
-
+	const int	  FACES_MAX					    = 2;
 	const float   MIN_DEPTH						= 0.8f;
 	const float	  MAX_DEPTH						= 3.0f;
+
+	//const NUI_IMAGE_RESOLUTION COLOR_RESOLUTION = MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_640x480;
+	const NUI_IMAGE_RESOLUTION COLOR_RESOLUTION = MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_1280x960;
+	const NUI_IMAGE_RESOLUTION DEPTH_RESOLUTION = MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_640x480;
+	//MsKinect::ImageResolution::NUI_IMAGE_RESOLUTION_1280x960	
 }
 
 class KinectAdapter 
 {
 	public:
+		static bool oneHead;
 		void Setup();	
 		void Shutdown();	
 
@@ -106,8 +108,7 @@ class KinectAdapter
 		vector<Vec2i>				 handsPosition;
 
 		int							 handsSleepSeconds, faceSleepSeconds;
-		Timer						 handsSleepTimer, faceSleepTimer;
-		
-		
-
+		Timer						 handsSleepTimer, faceSleepTimer;	
 };
+
+inline KinectAdapter&	kinect() { return *KinectAdapter::Instance(); };

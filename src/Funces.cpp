@@ -13,62 +13,45 @@
 #include "HowToUse.h"
 #include "Params.h"
 
-#define DEBUGMODE
-
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class Funces : public AppNative {
-  public:
+class Funces : public AppNative 
+{
+public:
 	void setup();	
-	void keyDown( ci::app::KeyEvent event );
+	void keyDown(ci::app::KeyEvent event );
 	void update();
 	void draw();
 	void shutdown();	
 
 private:
-	LocationEngine			 game;
+	LocationEngine game;
 };
-
 
 void Funces::setup()
 {	
-	setWindowSize(1920, 1080);//640*2, 480*2);
-	LeapController::Instance()->Setup();
+	setWindowSize(1920, 1080);
 
 	Instruction::Instance()->Setup();
 	HowToUse::Instance()->Setup();
-
-	game.Init("init", getWindow());
-	game.ChangeState(Instruction::Instance());
-
-	//setFullScreen(true);
-
 	HeadHelper::loadHeads();
 	//FaceController::loadFaces();
 
 	ReadyScreen::Instance()->Setup();
 	MainGame::Instance()->Setup();
+	//ScanFace::Instance()->Setup();
 	
-	ScanFace::Instance()->Setup();
-	
-
-	KinectAdapter::Instance()->Setup();
-	LeapController::Instance()->Setup();
+	kinect().Setup();
+	leap().Setup();
 
 	game.Init("init", getWindow());
-	game.ChangeState(MainGame::Instance());	
+	game.ChangeState(Instruction::Instance());	
 }
 
 void Funces::update()
-{	
-	KinectAdapter::Instance()->Update();
-	LeapController::Instance()->Update();
-	std::string gesture  = LeapController::Instance()->getLastGestureName();
-	if (gesture!="NONE" && gesture!="HAND_OVER")
-		console()<<"gesture ::"<<gesture<<endl;
-
+{		
 	game.Update();
 }
 
@@ -79,29 +62,28 @@ void Funces::draw()
 
 void Funces::keyDown( KeyEvent event )
 {
-	switch ( event.getCode() ) {
+	switch ( event.getCode() )
+	{
 	case KeyEvent::KEY_f:
 		setFullScreen( !isFullScreen() );
 		break;
+
 	case KeyEvent::KEY_q:
 		quit();
 		break;
 
 	case KeyEvent::KEY_1:
-		funces::oneHead = true;
+		KinectAdapter::oneHead = true;
 		break;
 
 	case KeyEvent::KEY_2:
-		funces::oneHead = false;
+		KinectAdapter::oneHead = false;
 		break;
-
 	}
 }
 
 void Funces::shutdown(  )
-{
-	KinectAdapter::Instance()->Shutdown();
-	LeapController::Instance()->Shutdown();
+{		
 }
 
 CINDER_APP_NATIVE( Funces, RendererGl )

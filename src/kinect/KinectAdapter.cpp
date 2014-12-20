@@ -5,6 +5,8 @@ using namespace kinectDefaults;
 
 KinectAdapter KinectAdapter::KinectAdapterState;
 
+bool KinectAdapter::oneHead = false;
+
 void KinectAdapter::Setup()
 {
 	deviceOptions.enableColor(true);
@@ -24,7 +26,7 @@ void KinectAdapter::Setup()
 		{
 			if ( !mFaceTracker[i] )  continue;
 			
-			if (SKELETS_IN_FRAME > 1 && !funces::oneHead) // IF SKELETONES IN FRAME HINT BY PASSING HEAD POINTS
+			if (SKELETS_IN_FRAME > 1 && !oneHead) // IF SKELETONES IN FRAME HINT BY PASSING HEAD POINTS
 			{
 				mFaceTracker[i]->update( mFrame.getColorSurface(), mFrame.getDepthChannel(), userheadPoints[i]);
 			}
@@ -36,7 +38,7 @@ void KinectAdapter::Setup()
 
 		if ( frame.getColorSurface() ) 
 		{
-			mTextureColor = gl::Texture::create( frame.getColorSurface() );
+			mTextureColor  = gl::Texture::create( frame.getColorSurface() );
 			_mTextureColor = gl::Texture(frame.getColorSurface());
 			surface8u =  frame.getColorSurface();
 		} 
@@ -76,6 +78,11 @@ void KinectAdapter::Setup()
 	} );
 	
 	faceTrackStart();
+
+	App::get()->getSignalShutdown().connect(bind(&KinectAdapter::Shutdown, this));
+	App::get()->getSignalUpdate().connect(bind(&KinectAdapter::Update, this));
+	
+	//getWindow()->up.connect( std::bind( &LocationEngine::MouseDown, this,std::placeholders::_1) );
 }
 
 void KinectAdapter::kinectConnect()
@@ -150,6 +157,13 @@ void KinectAdapter::Update()
 
 void KinectAdapter::updateSkeletonData()
 {
+	console()<<"funces::oneHead "<<KinectAdapter::oneHead<<endl;
+	if (KinectAdapter::oneHead)
+	{
+		console()<<"one return "<<endl;
+		return;
+	}
+
 	_NUI_SKELETON_POSITION_INDEX  headJoint = NUI_SKELETON_POSITION_HEAD;
 	_NUI_SKELETON_POSITION_INDEX  neckJoint = NUI_SKELETON_POSITION_HEAD;
 

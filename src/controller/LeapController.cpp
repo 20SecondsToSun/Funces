@@ -30,6 +30,11 @@ void LeapController::Setup()
 	// Update config to make gestures easier
 	config.setFloat( "Gesture.Swipe.MinLength", 30.0f );
 	config.setFloat( "Gesture.Swipe.MinVelocity", 100.0f );	
+	config.save();
+
+	App::get()->getSignalShutdown().connect(bind(&LeapController::Shutdown, this));
+	App::get()->getSignalUpdate().connect(bind(&LeapController::Update, this));
+
 }
 
 void LeapController::resetInitParams()
@@ -57,7 +62,6 @@ void LeapController::Update()
 		return;
 	}
 
-	// Process hand data
 	const Leap::HandList& hands = leapFrame.hands();	
 
 	if (gestureTimer.isStopped() == false && gestureTimer.getSeconds()> GESTURE_ALLOW_TIMER)
@@ -90,10 +94,6 @@ void LeapController::Update()
 		float pitch =  hands[0].palmNormal().pitch();
 		float yaw   = hands[0].palmNormal().yaw();
 		float roll  = hands[0].palmNormal().roll();
-
-
-		//console()<< " pitch  "<< pitch<<"  yaw "<<yaw<<" roll "<<roll<<endl;
-		
 
 
 		if (hands.count()==1) 

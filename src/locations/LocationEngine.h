@@ -1,5 +1,4 @@
-#ifndef LOCATIONENGINE_H
-#define LOCATIONENGINE_H
+#pragma once
 
 #include <vector>
 #include "cinder/app/AppNative.h"
@@ -33,12 +32,8 @@ public:
 
 	void animationRunning(bool value){isAnimation = value;}
 	bool isAnimationRunning(){ return isAnimation;}
-	ci::app::MouseEvent	getMouseEvent(){ return mouseEvent; }
-
-
-
+	ci::app::MouseEvent	getMouseEvent(){ return mouseEvent; }	
 private:
-	// the stack of states
 	vector<Location*> states;
 
 	bool m_running;
@@ -50,5 +45,3 @@ private:
 
 	ci::app::MouseEvent				mouseEvent;
 };
-
-#endif

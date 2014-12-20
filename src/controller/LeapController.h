@@ -11,9 +11,8 @@
 #include "TwoFingers.h"
 #include "OneFinger.h"
 
-
-namespace leapGestures{
-
+namespace leapGestures
+{
 	const std::string    TWO_FINGERS   =  "TWO_FINGERS";
 	const std::string    ONE_FINGER    =  "ONE_FINGER";
 	const std::string    SWIPE_LEFT    =  "SWIPE_LEFT";
@@ -22,8 +21,7 @@ namespace leapGestures{
 	const std::string    SMALLER	   =  "SMALLER";
 	const std::string    NONE		   =  "NONE";
 	const std::string    HAND_OVER	   =  "HAND_OVER";	
-	const std::string    CIRCLE	       =  "CIRCLE";	
-	
+	const std::string    CIRCLE	       =  "CIRCLE";		
 }
 
 class LeapController 
@@ -39,9 +37,10 @@ class LeapController
 
 	void						sleep(int seconds);
 
-	static LeapController* Instance() {
-			return &LeapControllerState;
-		};
+	static LeapController* Instance() 
+	{
+		return &LeapControllerState;
+	};
 
 protected:
 	LeapController(){};
@@ -70,3 +69,5 @@ protected:
 	 bool						canLeap;
 	 std::string				lastGestureName;
 };
+
+inline LeapController&	leap() { return *LeapController::Instance(); };

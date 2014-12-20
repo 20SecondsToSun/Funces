@@ -48,7 +48,7 @@ string TwoFingers::checkGesture(const Leap::Hand& hand, int count)
 
 
 
-	//	console()<<"try gesture!!!!!!!!!   "<<pointables<<" dist "<<dist<<endl;
+		console()<<"try gesture!!!!!!!!!   "<<gestureTime<<endl;
 
 
 
@@ -102,6 +102,7 @@ string TwoFingers::checkGesture(const Leap::Hand& hand, int count)
 
 void TwoFingers::initFlags()
 {
+	gestureTime = 0.9;
 	gestureContinue = false;
 	gestureBegin = false;
 	gestureEnd = false;

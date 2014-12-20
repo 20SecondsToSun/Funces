@@ -52,14 +52,14 @@ void Head3D::drawHeads3D()
 		
 		if (kinect->isFaceDetected(i))
 		{
-			if (i == 0)
+			/*if (i == 0)
 			{
 				face1_alive = head1_alive = true;
 			}
 			else
 			{
 				face2_alive = head2_alive = true;
-			}
+			}*/
 			MsKinect::Face face = kinect->getFace(i);
 			HeadObject *head	= headsController.getHeadObject(i, face);
 			if (head != NULL)
@@ -78,23 +78,23 @@ void Head3D::drawHeads3D()
 			{
 				drawHead(head);
 
-				if (i == 0)
+				/*if (i == 0)
 				{
 					head1_alive = true;
 				}
 				else
 				{
 					head2_alive = true;
-				}
+				}*/
 			}
 		}
 	}
 
-	Utils::textFieldDraw("FACE_1 - DETECTED: " + to_string(face1_alive), debugFont, Vec2f(100, 100), Color(1,0,0));
+	/*Utils::textFieldDraw("FACE_1 - DETECTED: " + to_string(face1_alive), debugFont, Vec2f(100, 100), Color(1,0,0));
 	Utils::textFieldDraw("HEAD_1 - ALIVE: " + to_string(head1_alive), debugFont, Vec2f(100, 200), Color(1,0,0));
 
 	Utils::textFieldDraw("FACE_2 - DETECTED: " + to_string(face2_alive), debugFont, Vec2f(100, 300), Color(1,0,0));
-	Utils::textFieldDraw("HEAD_2 - ALIVE: " + to_string(head2_alive), debugFont, Vec2f(100, 400), Color(1,0,0));
+	Utils::textFieldDraw("HEAD_2 - ALIVE: " + to_string(head2_alive), debugFont, Vec2f(100, 400), Color(1,0,0));*/
 
 	gl::disableDepthRead();
 }

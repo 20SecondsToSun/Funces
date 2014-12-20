@@ -4,8 +4,6 @@ using namespace ci;
 using namespace ci::app;
 using namespace ReadyScreenDefaults;
 
-using namespace funces;
-
 ReadyScreen ReadyScreen::ReadyScreenState;
 LeapController* ReadyScreen::leap	= LeapController::Instance();
 
@@ -136,10 +134,11 @@ void ReadyScreen::Draw(LocationEngine* game)
 				gl::scale(startPhotoScale);
 				gl::translate(startPhotoXY);	
 				gl::draw(screnshot);
-			gl::popMatrices();			
-			if (alphaFade<=0)qrCode.draw();	
+			gl::popMatrices();
 
-			//console()<<"   alphafade  "<<alphaFade<<endl;
+			if (alphaFade <= 0)
+				qrCode.draw();	
+
 			gl::color(ColorA(0, 0, 0, alphaFade));
 			gl::drawSolidRect(Rectf(0, 0, getWindowWidth(), getWindowHeight()));
 			gl::color(Color(1, 1, 1));
@@ -178,14 +177,12 @@ void ReadyScreen::serverSignal()
 	if (server.isResponseOK())
 	{
 		qrCode.setTextureString(server.getBuffer());
-		console()<<"link  :::::::::::::::::::::::::"<<server.getLink()<<endl;;
 		qrCode.setLink(server.getLink());
 		qrCode.isReady = true;
 		qrCode.isError = false;
 	}
 	else
 	{
-		console()<<"error  :::::::::::::::::::::::::"<<endl;;
 		qrCode.isError = true;
 	}
 

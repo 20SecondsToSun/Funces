@@ -1,10 +1,8 @@
-
 #include "AssetsManager.h"
 
 using namespace boost;
 using namespace ci;
 using namespace ci::app;
-//using namespace ci::qtime;
 using namespace gl;
 using namespace std;
 
